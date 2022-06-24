@@ -1,12 +1,14 @@
-﻿
-
-using System;
+﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
+using telegram_audio_bot;
 
 class Program
 {
@@ -14,12 +16,15 @@ class Program
 
     static void Main(string[] args)
     {
+        var lastChatMessageId = getLastMessageId(); // for offset old messages
         var cts = new CancellationTokenSource();
         var cancellationToken = cts.Token;
         var receiverOptions = new ReceiverOptions
         {
+            Offset = lastChatMessageId != 0 ? lastChatMessageId + 1 : null, // ignore old messages
             AllowedUpdates = { }, // receive all update types
         };
+
         _bot.StartReceiving(
             HandleUpdateAsync,
             HandleErrorAsync,
@@ -28,33 +33,57 @@ class Program
         );
         Console.ReadLine();
     }
-    public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+
+    private static int getLastMessageId()
     {
-        // Некоторые действия
-        Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
-        if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
+        try
         {
-            var message = update.Message;
-            if (message.Text.ToLower() == "/start")
-            {
-                await botClient.SendTextMessageAsync(message.Chat, "Start hello!");
-                return;
-            }
-            await botClient.SendTextMessageAsync(message.Chat, "Base hello!");
+            var upds = _bot.GetUpdatesAsync().Result;
+            return upds.Length > 0 ? upds[upds.Length - 1].Id : 0;
         }
-        else if (update.Type == Telegram.Bot.Types.Enums.UpdateType.InlineQuery)
+        catch (Exception e)
         {
-            await botClient.AnswerInlineQueryAsync(
-                update.InlineQuery.Id,
-                new InlineQueryResultCachedVoice[] { new InlineQueryResultCachedVoice(id: "1", fileId: "AwADAgADBwcAAoKG0Eg5gsPd_smTTBYE", title: "sdasd") },
-                isPersonal: false,
-                cacheTime: 0);
+            ErrorHandle("Can't get any bot updates. Possibly invalid token.", e, true);
+        }
+        return 0;
+    }
+
+    public static void ErrorHandle(string errorMessage, Exception exeption) => ErrorHandle(errorMessage, exeption, false);
+    
+
+    public static void ErrorHandle(string errorMessage, Exception exeption, bool hardQuit)
+    {
+        Console.WriteLine($"\n*** Error ***\nError: \"{errorMessage}\"\nMessage: {exeption.Message}\nStack Trace:\n {exeption.StackTrace}\n*** Error ***\n");
+        if (hardQuit)
+        {
+            Console.ReadLine();
+            Environment.Exit(0);
         }
     }
 
-    public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+    public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+    {
+        Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
+
+        switch (update.Type)
+        {
+            case UpdateType.Message:
+                await MessageHandler.HandleMessage(_bot, update.Message);
+                break;
+            case UpdateType.InlineQuery:
+                await MessageHandler.HandleInline(_bot, update.InlineQuery);
+                break;
+            default:
+                ErrorHandle(
+                    $"Switch default: unknown message type: \"{update.Type}\"", 
+                    new ArgumentOutOfRangeException($"At method: { new StackTrace().GetFrame(3)?.GetMethod()?.Name?? "HandleUpdateAsync" }"));
+                break;
+        }
+    }
+
+    public static async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exeption, CancellationToken cancellationToken)
     {
         // Некоторые действия
-        Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(exception));
+        Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(exeption));
     }
 }
