@@ -13,7 +13,7 @@ namespace telegram_audio_bot
         public  readonly record struct VoiceTitleAndId(string Title, string FileId);
         private readonly static string AudioStoreFileName = "audioStore.txt";
 
-        private static void CreateAduioStoreFileIfNotExist(){
+        private static void CreateAudioStoreFileIfNotExist(){
             using StreamWriter w = File.AppendText(AudioStoreFileName);
             w.Close();
         }
@@ -30,7 +30,7 @@ namespace telegram_audio_bot
 
         public static void RemoveVoiceRecord(string title)
         {
-            CreateAduioStoreFileIfNotExist();
+            CreateAudioStoreFileIfNotExist();
 
             if (!string.IsNullOrEmpty(title))
             {
@@ -42,7 +42,7 @@ namespace telegram_audio_bot
 
         public static InlineQueryResultCachedVoice[] GetActVoiceRecords()
         {
-            CreateAduioStoreFileIfNotExist();
+            CreateAudioStoreFileIfNotExist();
 
             var audioStoreFileLines = File.ReadAllLines(AudioStoreFileName).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
