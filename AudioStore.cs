@@ -14,8 +14,7 @@ namespace telegram_audio_bot
         private readonly static string AudioStoreFileName = "audioStore.txt";
 
         private static void CreateAudioStoreFileIfNotExist(){
-            using StreamWriter w = File.AppendText(AudioStoreFileName);
-            w.Close();
+            File.AppendText(AudioStoreFileName).Close();
         }
 
         public static void AppendNewVoiceRecord(string Title, string FileId)
