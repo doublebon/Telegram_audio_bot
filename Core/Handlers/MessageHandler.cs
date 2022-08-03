@@ -11,7 +11,7 @@ namespace telegram_audio_bot.Core.Handlers
 {
     public static class MessageHandler
     {
-
+        // TODO: will be refactored
         public static async Task HandleMessage(ITelegramBotClient botClient, Message? message)
         {
             if (message != null)
