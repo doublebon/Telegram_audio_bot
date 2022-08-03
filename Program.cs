@@ -11,7 +11,6 @@ using telegram_audio_bot.Core.Handlers;
 
 class Program
 {
-    
     static void Main(string[] args)
     {
         var lastChatMessageId = Bot.GetLastMessageId(); // for offset old messages
@@ -34,11 +33,6 @@ class Program
 
         Console.ReadLine();
     }
-
-
-    
-
-    
 
     public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
