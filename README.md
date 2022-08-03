@@ -1,6 +1,6 @@
 # Telegram_audio_bot
 
-For start enter your telegram bot token into Program.cs (will be replaced to config file soon)
+For start enter your telegram bot token into appsettings.json
 
 ## Usage
 1. After bot was started send ' /addvoice ' in chat with him
