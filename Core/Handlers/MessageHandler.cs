@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using telegram_audio_bot.Core.Store;
 
-namespace telegram_audio_bot
+namespace telegram_audio_bot.Core.Handlers
 {
     public static class MessageHandler
     {
 
-        public static async Task HandleMessage(ITelegramBotClient botClient, Message? message){
-            if(message != null)
+        public static async Task HandleMessage(ITelegramBotClient botClient, Message? message)
+        {
+            if (message != null)
             {
 
                 switch (message.Type)
@@ -37,11 +36,11 @@ namespace telegram_audio_bot
                             if ((message.ReplyToMessage?.Text ?? "").Contains("title:fileId"))
                             {
                                 var textLines = message.Text?.Split("\n");
-                                if(textLines != null && textLines.Length > 0)
+                                if (textLines != null && textLines.Length > 0)
                                 {
-                                    foreach(var line in textLines)
+                                    foreach (var line in textLines)
                                     {
-                                        var splitMessage = Regex.Replace(line, @"\s{2,}", String.Empty).Split(":");
+                                        var splitMessage = Regex.Replace(line, @"\s{2,}", string.Empty).Split(":");
                                         if (splitMessage != null && splitMessage.Length > 1)
                                         {
                                             AudioStore.AppendNewVoiceRecord(splitMessage.ElementAt(0), splitMessage.ElementAt(1));
@@ -59,11 +58,12 @@ namespace telegram_audio_bot
                                 await botClient.SendTextMessageAsync(message.Chat, $"Hello! {message.Chat.Username}. I got your message, but for use write @*this_bot_name* in chat!");
                             }
                         }
-                        break;    
+                        break;
                 }
             }
         }
-        public static async Task HandleInline(ITelegramBotClient botClient, InlineQuery? inlineMessage){
+        public static async Task HandleInline(ITelegramBotClient botClient, InlineQuery? inlineMessage)
+        {
             if (inlineMessage is not null)
             {
                 await botClient.AnswerInlineQueryAsync(
@@ -73,7 +73,6 @@ namespace telegram_audio_bot
                     cacheTime: 0);
             }
         }
-
 
     }
 }

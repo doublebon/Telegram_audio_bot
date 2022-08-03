@@ -6,20 +6,21 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Types.InlineQueryResults;
 
-namespace telegram_audio_bot
+namespace telegram_audio_bot.Core.Store
 {
     internal class AudioStore
     {
-        public  readonly record struct VoiceTitleAndId(string Title, string FileId);
+        public readonly record struct VoiceTitleAndId(string Title, string FileId);
         private readonly static string AudioStoreFileName = "audioStore.txt";
 
-        private static void CreateAudioStoreFileIfNotExist(){
+        private static void CreateAudioStoreFileIfNotExist()
+        {
             File.AppendText(AudioStoreFileName).Close();
         }
 
         public static void AppendNewVoiceRecord(string Title, string FileId)
         {
-            if(!string.IsNullOrEmpty(Title) && !string.IsNullOrEmpty(FileId))
+            if (!string.IsNullOrEmpty(Title) && !string.IsNullOrEmpty(FileId))
             {
                 using StreamWriter w = File.AppendText(AudioStoreFileName);
                 w.WriteLine($"{Title}:{FileId}");
@@ -33,7 +34,7 @@ namespace telegram_audio_bot
 
             if (!string.IsNullOrEmpty(title))
             {
-                var fileLines = new List<string>(System.IO.File.ReadAllLines(AudioStoreFileName));
+                var fileLines = new List<string>(File.ReadAllLines(AudioStoreFileName));
                 fileLines.RemoveAll(line => line.ToLower().Contains(title.ToLower()));
                 File.WriteAllLines(AudioStoreFileName, fileLines.ToArray());
             }
