@@ -1,11 +1,11 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY OrderProcessingWorker.csproj .
-RUN dotnet restore "telegram_audio_bot.csproj"
+FROM mcr.microsoft.com/dotnet/runtime:6.0
+RUN apt-get update && apt-get install curl -y && apt-get install xz-utils -y
+RUN mkdir /ffmpeg && \
+    cd /ffmpeg && \
+    curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ffmpeg.tar.xz -s && \
+    tar -xf ffmpeg.tar.xz && \
+    mv ffmpeg-*-amd64-static/ffmpeg /usr/bin && \
+    cd / && \
+    rm -rf ffmpeg
 COPY . .
-RUN dotnet publish "telegram_audio_bot.csproj" -c Release -o /publish
-
-FROM mcr.microsoft.com/dotnet/runtime:6.0 as final
-WORKDIR /app
-COPY --from=build /publish .
 ENTRYPOINT ["dotnet", "telegram_audio_bot.dll"]

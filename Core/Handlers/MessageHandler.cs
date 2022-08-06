@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 using telegram_audio_bot.Core.Store;
 
@@ -11,6 +13,7 @@ namespace telegram_audio_bot.Core.Handlers
 {
     public static class MessageHandler
     {
+
         // TODO: will be refactored
         public static async Task HandleMessage(ITelegramBotClient botClient, Message? message)
         {
@@ -19,6 +22,30 @@ namespace telegram_audio_bot.Core.Handlers
 
                 switch (message.Type)
                 {
+                    case MessageType.Audio:
+
+                        //var file = await botClient.GetFileAsync(message.Audio.FileId);
+
+
+                        //using (var saveImageStream = new FileStream(@"D:\"+file.FilePath, FileMode.Create))
+                        //{
+                        //    await botClient.DownloadFileAsync(file.FilePath, saveImageStream);
+                        //}
+
+                        using (var saveImageStream2 = new FileStream(@"D:\music\perfetta2.ogg", FileMode.Open))
+                        {
+                            await botClient.SendVoiceAsync(
+                           message.Chat,
+                           new InputOnlineFile(saveImageStream2));
+                        }
+
+
+                       
+
+                        
+
+
+                        break;
                     case MessageType.Voice:
                         await botClient.SendTextMessageAsync(message.Chat, message.Voice?.FileId ?? "");
                         break;
