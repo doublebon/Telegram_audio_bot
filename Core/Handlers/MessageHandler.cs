@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -8,6 +11,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 using telegram_audio_bot.Core.Store;
+using telegram_audio_bot.Core.Support;
 
 namespace telegram_audio_bot.Core.Handlers
 {
@@ -23,27 +27,29 @@ namespace telegram_audio_bot.Core.Handlers
                 switch (message.Type)
                 {
                     case MessageType.Audio:
-
-                        //var file = await botClient.GetFileAsync(message.Audio.FileId);
-
-
-                        //using (var saveImageStream = new FileStream(@"D:\"+file.FilePath, FileMode.Create))
-                        //{
-                        //    await botClient.DownloadFileAsync(file.FilePath, saveImageStream);
-                        //}
-
-                        using (var saveImageStream2 = new FileStream(@"D:\music\perfetta2.ogg", FileMode.Open))
+                        if (message.Audio != null)
                         {
-                            await botClient.SendVoiceAsync(
-                           message.Chat,
-                           new InputOnlineFile(saveImageStream2));
+                            await botClient.SendTextMessageAsync(message.Chat, "Got file, start converting to voice...");
+                            var file = await botClient.GetFileAsync(message.Audio.FileId);
+                            var filesDir = Directory.CreateDirectory($"music/{file.FileId}");
+
+                            var audioFilePath = filesDir.FullName + '/' + file.FileId + "." + file.FilePath.Split('.').Last();
+
+                            using (var createStream = new FileStream(audioFilePath, FileMode.Create))
+                            {
+                                await botClient.DownloadFileAsync(file.FilePath, createStream);
+                            }
+
+                            var convertFile = Converter.AudioToVoice(audioFilePath);
+
+                            using (var openStream = new FileStream(await convertFile, FileMode.Open))
+                            {
+                                var uploadedVoice = await botClient.SendVoiceAsync(message.Chat, new InputOnlineFile(openStream));
+                                await botClient.SendTextMessageAsync(message.Chat, uploadedVoice.Voice.FileId);
+                            }
+
+                            filesDir.Delete(true);
                         }
-
-
-                       
-
-                        
-
 
                         break;
                     case MessageType.Voice:
