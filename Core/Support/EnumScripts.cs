@@ -10,7 +10,7 @@ namespace telegram_audio_bot.Core.Support
     {
         public const string
         FFMPEG_CONVERT_WIN  = "Commands/ffmpeg.bat",
-        FFMPEG_CONVERT_UNIX = "Commands/ffmpeg";
+        FFMPEG_CONVERT_UNIX = "Commands/ffmpeg.sh";
 
     }
 }

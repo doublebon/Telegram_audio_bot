@@ -8,4 +8,5 @@ RUN mkdir /ffmpeg && \
     cd / && \
     rm -rf ffmpeg
 COPY . .
+RUN chmod a+x Commands/*
 ENTRYPOINT ["dotnet", "telegram_audio_bot.dll"]
