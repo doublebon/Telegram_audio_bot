@@ -1,2 +1,2 @@
 #!/bin/bash
-ffmpeg -loglevel panic -i $1 -c:a libopus -compression_level 10 -frame_duration 60 -vbr on -application voip $2 -y
+ffmpeg.exe -loglevel panic -i $1 -vn -acodec libopus -b:a 16k $2
