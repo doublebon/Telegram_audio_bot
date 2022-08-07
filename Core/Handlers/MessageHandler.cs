@@ -29,7 +29,7 @@ namespace telegram_audio_bot.Core.Handlers
                     case MessageType.Audio:
                         if (message.Audio != null)
                         {
-                            await botClient.SendTextMessageAsync(message.Chat, "Got file, start converting to voice...");
+                            var infoMsg = await botClient.SendTextMessageAsync(message.Chat, "Got file, start upload...");
                             var file = await botClient.GetFileAsync(message.Audio.FileId);
                             var filesDir = Directory.CreateDirectory($"music/{file.FileId}");
 
@@ -41,6 +41,7 @@ namespace telegram_audio_bot.Core.Handlers
                                     await botClient.DownloadFileAsync(file.FilePath, createStream);
                                 }
 
+                                infoMsg = await botClient.EditMessageTextAsync(message.Chat, infoMsg.MessageId, "File uploaded. Start convert to voice...");
                                 var convertFile = Converter.AudioToVoice(audioFilePath);
 
                                 using (var openStream = new FileStream(await convertFile, FileMode.Open))
