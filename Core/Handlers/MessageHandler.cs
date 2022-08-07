@@ -35,22 +35,24 @@ namespace telegram_audio_bot.Core.Handlers
 
                             var audioFilePath = filesDir.FullName + '/' + file.FileId + "." + file.FilePath.Split('.').Last();
 
-                            using (var createStream = new FileStream(audioFilePath, FileMode.Create))
-                            {
-                                await botClient.DownloadFileAsync(file.FilePath, createStream);
+                            try{
+                                using (var createStream = new FileStream(audioFilePath, FileMode.Create))
+                                {
+                                    await botClient.DownloadFileAsync(file.FilePath, createStream);
+                                }
+
+                                var convertFile = Converter.AudioToVoice(audioFilePath);
+
+                                using (var openStream = new FileStream(await convertFile, FileMode.Open))
+                                {
+                                    var uploadedVoice = await botClient.SendVoiceAsync(message.Chat, new InputOnlineFile(openStream));
+                                    await botClient.SendTextMessageAsync(message.Chat, uploadedVoice?.Voice?.FileId ?? "");
+                                }
                             }
-
-                            var convertFile = Converter.AudioToVoice(audioFilePath);
-
-                            using (var openStream = new FileStream(await convertFile, FileMode.Open))
-                            {
-                                var uploadedVoice = await botClient.SendVoiceAsync(message.Chat, new InputOnlineFile(openStream));
-                                await botClient.SendTextMessageAsync(message.Chat, uploadedVoice.Voice.FileId);
+                            finally{
+                                filesDir.Delete(true);
                             }
-
-                            filesDir.Delete(true);
                         }
-
                         break;
                     case MessageType.Voice:
                         await botClient.SendTextMessageAsync(message.Chat, message.Voice?.FileId ?? "");
