@@ -17,5 +17,10 @@ namespace telegram_audio_bot.Core.Config
         {
             return JsonConfig?["TelegramBotToken"]?.AsValue().GetValue<string>() ?? throw new KeyNotFoundException($"Can't find 'TelegramBotToken' key at {BaseConfigName} config file");
         }
+
+        public static List<string> GetAdminUsernames()
+        {
+            return JsonConfig?["AdminUsernames"]?.AsArray().Select(i => i?.ToString().ToLower() ?? "").ToList() ?? throw new KeyNotFoundException($"Can't find 'AdminUsernames' array key at {BaseConfigName} config file");
+        }
     }
 }

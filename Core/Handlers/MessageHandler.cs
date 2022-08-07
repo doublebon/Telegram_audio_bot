@@ -10,6 +10,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
+using telegram_audio_bot.Core.Config;
 using telegram_audio_bot.Core.Store;
 using telegram_audio_bot.Core.Support;
 
@@ -27,7 +28,7 @@ namespace telegram_audio_bot.Core.Handlers
                 switch (message.Type)
                 {
                     case MessageType.Audio:
-                        if (message.Audio != null)
+                        if (message.Audio != null && message.Chat.Username != null && AppConfig.GetAdminUsernames().Contains(message.Chat.Username.ToLower()))
                         {
                             var infoMsg = await botClient.SendTextMessageAsync(message.Chat, "Got file, start upload...");
                             var file = await botClient.GetFileAsync(message.Audio.FileId);
@@ -46,6 +47,7 @@ namespace telegram_audio_bot.Core.Handlers
 
                                 using (var openStream = new FileStream(await convertFile, FileMode.Open))
                                 {
+                                    await botClient.EditMessageTextAsync(message.Chat, infoMsg.MessageId, "Voice file | FileId: ");
                                     var uploadedVoice = await botClient.SendVoiceAsync(message.Chat, new InputOnlineFile(openStream));
                                     await botClient.SendTextMessageAsync(message.Chat, uploadedVoice?.Voice?.FileId ?? "");
                                 }

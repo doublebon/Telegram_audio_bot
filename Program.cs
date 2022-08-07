@@ -14,7 +14,6 @@ class Program
     static void Main(string[] args)
     {
         var lastChatMessageId = Bot.GetLastMessageId(); // for offset old messages
-
         Console.WriteLine(lastChatMessageId);
         var cts = new CancellationTokenSource();
         var cancellationToken = cts.Token;
