@@ -9,6 +9,8 @@
   <ItemGroup>
     <None Remove="Dockerfile" />
 	<Content Include="appsettings.json" CopyToOutputDirectory="Always" />
+	<Content Include="Dockerfile" CopyToOutputDirectory="Always" />
+    <Content Include="Commands\*" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
