@@ -10,7 +10,7 @@
     <None Remove="Commands\ffmpeg.bat" />
     <None Remove="Dockerfile" />
 	<Content Include="appsettings.json" CopyToOutputDirectory="Always" />
-	<Content Include="DockerFile" CopyToOutputDirectory="Always" />
+	<Content Include="Dockerfile" CopyToOutputDirectory="Always" />
     <Content Include="Commands\*" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
