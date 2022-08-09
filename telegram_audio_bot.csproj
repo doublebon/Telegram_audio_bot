@@ -11,6 +11,8 @@
 	<Content Include="appsettings.json" CopyToOutputDirectory="Always" />
 	<Content Include="Dockerfile" CopyToOutputDirectory="Always" />
     <Content Include="Commands\*" CopyToOutputDirectory="Always" />
+    <Content Include="bot_run.sh" CopyToOutputDirectory="Always" />
+    <Content Include="bot_run_with_prune.sh" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
