@@ -11,6 +11,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 using telegram_audio_bot.Core.Config;
+using telegram_audio_bot.Core.Handlers.Commands;
 using telegram_audio_bot.Core.Store;
 using telegram_audio_bot.Core.Support;
 
@@ -61,6 +62,8 @@ namespace telegram_audio_bot.Core.Handlers
                         await botClient.SendTextMessageAsync(message.Chat, message.Voice?.FileId ?? "");
                         break;
                     case MessageType.Text:
+                        CommandController.TryExecCommand(botClient, message);
+
                         if (message.Text?.ToLower() == "/addvoice")
                         {
                             await botClient.SendTextMessageAsync(message.Chat, "Add new voice record in format title:fileId", ParseMode.Markdown, replyMarkup: new ForceReplyMarkup { Selective = false });

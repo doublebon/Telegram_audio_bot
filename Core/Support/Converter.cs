@@ -16,7 +16,7 @@ namespace telegram_audio_bot.Core.Support
             var voiceFilePath = audioPath.Replace(Path.GetExtension(audioPath), ".ogg");
 
             var script = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? EnumScripts.FFMPEG_CONVERT_WIN : EnumScripts.FFMPEG_CONVERT_UNIX;
-            ProcessStartInfo info = new ProcessStartInfo(script, $"{audioPath} {voiceFilePath}");
+            var info   = new ProcessStartInfo(script, $"{audioPath} {voiceFilePath}");
             await Process.Start(info).WaitForExitAsync();
 
             return voiceFilePath;
