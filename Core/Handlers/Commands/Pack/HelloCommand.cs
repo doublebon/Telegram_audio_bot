@@ -13,22 +13,16 @@ namespace telegram_audio_bot.Core.Handlers.Commands.Pack
             return @"/hello";
         }
 
-        protected override async void AnswerOnReply(ITelegramBotClient botClient, Message message)
+        public override async Task<bool> TryCommandRun(ITelegramBotClient botClient, Message message)
         {
-            if (message.ReplyToMessage?.MessageId == GetMessageIdForReply())
-            {
-                await botClient.SendTextMessageAsync(message.Chat, "Pidor!", ParseMode.Markdown);
-            }
-        }
+            var isAnswer = await AnswerOnReply(botClient, message);
 
-        public override async void TryCommandRun(ITelegramBotClient botClient, Message message)
-        {
-            AnswerOnReply(botClient, message);
-
-            if (this.IsCommand(message))
+            if (!isAnswer && IsCommand(message))
             {
                 SaveMessageForReply(await botClient.SendTextMessageAsync(message.Chat, "Hello!", ParseMode.Markdown, replyMarkup: new ForceReplyMarkup { Selective = false }));
+                return true;
             }
+            return false;
         }
     }
 }

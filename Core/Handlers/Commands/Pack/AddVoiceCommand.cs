@@ -19,22 +19,27 @@ namespace telegram_audio_bot.Core.Handlers.Commands.Pack
             return @"/addvoice";
         }
 
-        protected override async void AnswerOnReply(ITelegramBotClient botClient, Message message)
+        protected override async Task<bool> AnswerOnReply(ITelegramBotClient botClient, Message message)
         {
             if (message.ReplyToMessage?.MessageId == GetMessageIdForReply())
             {
                 await AppendAudioToStore(botClient, message);
+                return true;
             }
+            return false;
         }
 
-        public override async void TryCommandRun(ITelegramBotClient botClient, Message message)
+        public override async Task<bool> TryCommandRun(ITelegramBotClient botClient, Message message)
         {
-            AnswerOnReply(botClient, message);
+            var isAnswer = await AnswerOnReply(botClient, message);
 
-            if (IsCommand(message))
+            if (!isAnswer && IsCommand(message))
             {
                 SaveMessageForReply(await botClient.SendTextMessageAsync(message.Chat, "Add new voice record in format title:fileId", ParseMode.Markdown, replyMarkup: new ForceReplyMarkup { Selective = false }));
+                return true;
             }
+
+            return false;
         }
 
         private static async Task AppendAudioToStore(ITelegramBotClient botClient, Message message)
