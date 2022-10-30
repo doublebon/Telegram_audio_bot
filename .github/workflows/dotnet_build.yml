@@ -28,4 +28,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with: 
           name: telegram_audio_bot
-          path: /home/runner/work/Telegram_audio_bot
+          path: /home/runner/work/Telegram_audio_bot/bin/Debug/net6.0
