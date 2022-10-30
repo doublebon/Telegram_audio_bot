@@ -27,7 +27,7 @@ jobs:
     - name: Use the Upload Artifact GitHub Action
       uses: actions/upload-artifact@v2
       with: 
-          name: telegram_audio_bot_ver(${{ github.run_number }})
+          name: telegram_audio_bot_0.${{ github.run_number }}
           path: /home/runner/work/Telegram_audio_bot
     - name: Remove old artifacts
       uses: c-hive/gha-remove-artifacts@v1
