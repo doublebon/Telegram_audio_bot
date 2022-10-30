@@ -65,8 +65,3 @@ namespace telegram_audio_bot.Core.Handlers.Commands.Pack
         }
     }
 }
-
-//if (message.Text?.ToLower() == "/addvoice")
-//{
-//    await botClient.SendTextMessageAsync(message.Chat, "Add new voice record in format title:fileId", ParseMode.Markdown, replyMarkup: new ForceReplyMarkup { Selective = false });
-//}

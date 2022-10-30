@@ -19,7 +19,7 @@ namespace telegram_audio_bot.Core.Handlers.Commands.Pack
 
             if (!isAnswer && IsCommand(message))
             {
-                SaveMessageForReply(await botClient.SendTextMessageAsync(message.Chat, "Hello!", ParseMode.Markdown, replyMarkup: new ForceReplyMarkup { Selective = false }));
+                await botClient.SendTextMessageAsync(message.Chat, "Hello!", ParseMode.Markdown, replyMarkup: new ForceReplyMarkup { Selective = false });
                 return true;
             }
             return false;
