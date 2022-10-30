@@ -28,4 +28,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with: 
           name: assets-for-download
-          path: /home/runner/work/
+          path: /home/runner/work/Telegram_audio_bot
