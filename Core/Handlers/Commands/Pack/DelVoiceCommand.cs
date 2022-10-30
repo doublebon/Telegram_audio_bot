@@ -23,6 +23,7 @@ namespace telegram_audio_bot.Core.Handlers.Commands.Pack
             if (message.ReplyToMessage?.MessageId == GetMessageIdForReply())
             {
                 await RemoveAudioFromStore(botClient, message);
+                AudioStore.UpdateCachedVoicesList();
                 return true;
             }
             return false;
@@ -30,6 +31,11 @@ namespace telegram_audio_bot.Core.Handlers.Commands.Pack
 
         public override async Task<bool> TryCommandRun(ITelegramBotClient botClient, Message message)
         {
+            if (!Bot.IsAdminMessage(message))
+            {
+                return false;
+            }
+
             var isAnswer = await AnswerOnReply(botClient, message);
 
             if (!isAnswer && IsCommand(message))

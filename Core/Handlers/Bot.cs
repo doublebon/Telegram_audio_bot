@@ -1,5 +1,6 @@
 ﻿using System;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 using telegram_audio_bot.Core.Config;
 
 namespace telegram_audio_bot.Core.Handlers
@@ -22,6 +23,11 @@ namespace telegram_audio_bot.Core.Handlers
                 ErrorHandler.HandleError("Can't get any bot updates. Possibly invalid token.", e, true);
             }
             return 0;
+        }
+
+        public static bool IsAdminMessage(Message message)
+        {
+            return AppConfig.GetAdminUsernames().Contains(message.Chat?.Username?.ToLower() ?? "");
         }
     }
 }

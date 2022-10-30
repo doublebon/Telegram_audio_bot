@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace telegram_audio_bot.Core.Store
 {
     internal class AudioStore
     {
+        private static ConcurrentBag<VoiceTitleAndId> CachedVoices = new();
         public readonly record struct VoiceTitleAndId(string Title, string FileId);
         private readonly static string AudioStoreFileName = "audioStore.txt";
 
@@ -30,8 +32,6 @@ namespace telegram_audio_bot.Core.Store
 
         public static void RemoveVoiceRecord(string title)
         {
-            CreateAudioStoreFileIfNotExist();
-
             if (!string.IsNullOrEmpty(title))
             {
                 var fileLines = new List<string>(File.ReadAllLines(AudioStoreFileName));
@@ -42,28 +42,19 @@ namespace telegram_audio_bot.Core.Store
 
         public static InlineQueryResultCachedVoice[] GetActVoiceRecords()
         {
-            CreateAudioStoreFileIfNotExist();
-
-            var audioStoreFileLines = File.ReadAllLines(AudioStoreFileName).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-
-            var audioInfoList = new List<VoiceTitleAndId>(audioStoreFileLines.Length);
-            foreach (var line in audioStoreFileLines)
-            {
-                var splittedLine = line.Split(":");
-                audioInfoList.Add(new VoiceTitleAndId(splittedLine[0], splittedLine[1]));
-            }
-
-            var voices = new InlineQueryResultCachedVoice[audioStoreFileLines.Length];
-
-            for (int i = 0; i < audioStoreFileLines.Length; i++)
-            {
-                var parsedFromFile = audioInfoList[i];
-                voices[i] = new InlineQueryResultCachedVoice(id: Convert.ToString(i), title: parsedFromFile.Title, fileId: parsedFromFile.FileId);
-            }
-
-            return voices;
+            return CachedVoices.Select((audio, i) => new InlineQueryResultCachedVoice(id: Convert.ToString(i), title: audio.Title, fileId: audio.FileId)).ToArray();
         }
 
+        public static void UpdateCachedVoicesList()
+        {
+            CreateAudioStoreFileIfNotExist();
+            CachedVoices.Clear();
+            File.ReadAllLines(AudioStoreFileName).Where(x => !string.IsNullOrWhiteSpace(x)).Reverse<string>().ToList().ForEach(line =>
+            {
+                var splittedLine = line.Split(":");
+                CachedVoices.Add(new VoiceTitleAndId(splittedLine[0], splittedLine[1]));
+            });
+        }
 
 
     }
