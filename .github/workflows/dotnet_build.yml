@@ -29,3 +29,7 @@ jobs:
       with: 
           name: telegram_audio_bot
           path: /home/runner/work/Telegram_audio_bot
+    - name: Remove old artifacts
+      uses: c-hive/gha-remove-artifacts@v1
+      with:
+        age: '2 days'
