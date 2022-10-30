@@ -24,8 +24,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Step 3 - Use the Upload Artifact GitHub Action
+    - name: Use the Upload Artifact GitHub Action
       uses: actions/upload-artifact@v2
       with: 
-          name: assets-for-download
+          name: telegram_audio_bot
           path: /home/runner/work/Telegram_audio_bot
