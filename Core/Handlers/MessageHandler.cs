@@ -29,7 +29,7 @@ namespace telegram_audio_bot.Core.Handlers
                 switch (message.Type)
                 {
                     case MessageType.Audio:
-                        if (message.Audio != null && message.Chat.Username != null && AppConfig.GetAdminUsernames().Contains(message.Chat.Username.ToLower()))
+                        if (message.Audio != null && message.Chat.Username != null && Bot.IsAdminMessage(message))
                         {
                             var infoMsg = await botClient.SendTextMessageAsync(message.Chat, "Got file, start upload...");
                             var file = await botClient.GetFileAsync(message.Audio.FileId);

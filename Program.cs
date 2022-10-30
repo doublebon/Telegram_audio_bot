@@ -8,11 +8,13 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using telegram_audio_bot.Core.Config;
 using telegram_audio_bot.Core.Handlers;
+using telegram_audio_bot.Core.Store;
 
 class Program
 {
     static void Main(string[] args)
     {
+        AudioStore.UpdateCachedVoicesList();
         var lastChatMessageId = Bot.GetLastMessageId(); // for offset old messages
         Console.WriteLine(lastChatMessageId);
         var cts = new CancellationTokenSource();
