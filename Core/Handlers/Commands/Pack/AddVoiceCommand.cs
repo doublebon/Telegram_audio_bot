@@ -36,10 +36,9 @@ namespace telegram_audio_bot.Core.Handlers.Commands.Pack
             if (!isAnswer && IsCommand(message))
             {
                 SaveMessageForReply(await botClient.SendTextMessageAsync(message.Chat, "Add new voice record in format title:fileId", ParseMode.Markdown, replyMarkup: new ForceReplyMarkup { Selective = false }));
-                return true;
             }
 
-            return false;
+            return isAnswer || IsCommand(message);
         }
 
         private static async Task AppendAudioToStore(ITelegramBotClient botClient, Message message)

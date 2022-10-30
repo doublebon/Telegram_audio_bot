@@ -62,8 +62,11 @@ namespace telegram_audio_bot.Core.Handlers
                         await botClient.SendTextMessageAsync(message.Chat, message.Voice?.FileId ?? "");
                         break;
                     case MessageType.Text:
-                        CommandController.TryExecCommand(botClient, message);
-                        await botClient.SendTextMessageAsync(message.Chat, $"Hello! {message.Chat.Username}. I got your message, but for use write @*this_bot_name* in chat!");
+                        var isCommand = await CommandController.TryExecCommand(botClient, message);
+                        if (!isCommand)
+                        {
+                            await botClient.SendTextMessageAsync(message.Chat, $"Hello! {message.Chat.Username}. I got your message, but for use write @*this_bot_name* in chat!");
+                        }
                         break;
                 }
             }

@@ -35,9 +35,8 @@ namespace telegram_audio_bot.Core.Handlers.Commands.Pack
             if (!isAnswer && IsCommand(message))
             {
                 SaveMessageForReply(await botClient.SendTextMessageAsync(message.Chat, "Enter title of record for remove", ParseMode.Markdown, replyMarkup: new ForceReplyMarkup { Selective = false }));
-                return true;
             }
-            return false;
+            return isAnswer || IsCommand(message);
         }
 
         private static async Task RemoveAudioFromStore(ITelegramBotClient botClient, Message message)

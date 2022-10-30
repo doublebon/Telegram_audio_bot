@@ -13,7 +13,7 @@ namespace telegram_audio_bot.Core.Handlers.Commands
         private Message? MessageForReply;
 
         protected abstract string GetCommandName();
-        protected virtual  Task<bool> AnswerOnReply(ITelegramBotClient botClient, Message message){ return false; }
+        protected virtual  Task<bool> AnswerOnReply(ITelegramBotClient botClient, Message message){ return Task.FromResult(false); }
         public    abstract Task<bool> TryCommandRun(ITelegramBotClient botClient, Message message);
 
         protected bool IsCommand(Message message)

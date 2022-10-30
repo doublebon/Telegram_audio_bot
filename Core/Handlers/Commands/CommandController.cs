@@ -21,17 +21,17 @@ namespace telegram_audio_bot.Core.Handlers.Commands
 
         public static async Task<bool> TryExecCommand(ITelegramBotClient botClient, Message message)
         {
-            bool isCommandExec = false;
-
             if(message is not null)
             {
                 CommandsForUserId.TryAdd(message.From!.Id, CommandsList);
                 foreach (var command in CommandsForUserId[message.From!.Id])
                 {
-                    await command.TryCommandRun(botClient, message) == true ? return true : 
+                    var isCommandWasExecuted = await command.TryCommandRun(botClient, message);
+                    if (isCommandWasExecuted)
+                        return true;
                 }
             }
-            return isCommandExec;
+            return false;
         }
     }
 }
