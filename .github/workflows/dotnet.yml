@@ -24,9 +24,7 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-    - name: Download artifact
-  # You may pin to the exact commit or the version.
-  # uses: aochmann/actions-download-artifact@5709392f11b5937bd316e52687ad87f7deced5f5
-      uses: aochmann/actions-download-artifact@1.0.4
+    - name: Step 3 - Use the Upload Artifact GitHub Action
+      uses: actions/upload-artifact@v2
+      with: 
+          name: assets-for-download
