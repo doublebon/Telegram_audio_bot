@@ -40,9 +40,9 @@ namespace telegram_audio_bot.Core.Store
             }
         }
 
-        public static InlineQueryResultCachedVoice[] GetActVoiceRecords()
+        public static InlineQueryResultCachedVoice[] GetActVoiceRecords(string prefix)
         {
-            return CachedVoices.Select((audio, i) => new InlineQueryResultCachedVoice(id: Convert.ToString(i), title: audio.Title, fileId: audio.FileId)).ToArray();
+            return CachedVoices.Where(audio => audio.Title.ToLower().Contains(prefix.ToLower())).Select((audio, i) => new InlineQueryResultCachedVoice(id: Convert.ToString(i), title: audio.Title, fileId: audio.FileId)).ToArray();
         }
 
         public static void UpdateCachedVoicesList()

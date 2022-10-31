@@ -77,7 +77,7 @@ namespace telegram_audio_bot.Core.Handlers
             {
                 await botClient.AnswerInlineQueryAsync(
                     inlineMessage.Id,
-                    AudioStore.GetActVoiceRecords(),
+                    AudioStore.GetActVoiceRecords(inlineMessage.Query),
                     isPersonal: false,
                     cacheTime: 0);
             }
