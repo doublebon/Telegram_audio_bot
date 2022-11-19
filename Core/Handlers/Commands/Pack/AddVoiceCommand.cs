@@ -8,10 +8,13 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using telegram_audio_bot.Core.Handlers.Commands.Attributes;
 using telegram_audio_bot.Core.Store;
 
 namespace telegram_audio_bot.Core.Handlers.Commands.Pack
 {
+    [AdminRequire]
+    [BotCommand]
     internal class AddVoiceCommand : BaseCommand
     {
         protected override string GetCommandName()
@@ -32,11 +35,6 @@ namespace telegram_audio_bot.Core.Handlers.Commands.Pack
 
         public override async Task<bool> TryCommandRun(ITelegramBotClient botClient, Message message)
         {
-            if (!Bot.IsAdminMessage(message))
-            {
-                return false;
-            }
-
             var isAnswer = await AnswerOnReply(botClient, message);
 
             if (!isAnswer && IsCommand(message))

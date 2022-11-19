@@ -1,16 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
-using telegram_audio_bot.Core.Config;
 using telegram_audio_bot.Core.Handlers.Commands;
 using telegram_audio_bot.Core.Store;
 using telegram_audio_bot.Core.Support;
@@ -37,7 +32,8 @@ namespace telegram_audio_bot.Core.Handlers
 
                             var audioFilePath = filesDir.FullName + '/' + file.FileId + "." + file.FilePath.Split('.').Last();
 
-                            try{
+                            try
+                            {
                                 using (var createStream = new FileStream(audioFilePath, FileMode.Create))
                                 {
                                     await botClient.DownloadFileAsync(file.FilePath, createStream);
@@ -53,7 +49,8 @@ namespace telegram_audio_bot.Core.Handlers
                                     await botClient.SendTextMessageAsync(message.Chat, uploadedVoice?.Voice?.FileId ?? "");
                                 }
                             }
-                            finally{
+                            finally
+                            {
                                 filesDir.Delete(true);
                             }
                         }
@@ -65,7 +62,9 @@ namespace telegram_audio_bot.Core.Handlers
                         var isCommand = await CommandController.TryExecCommand(botClient, message);
                         if (!isCommand)
                         {
-                            await botClient.SendTextMessageAsync(message.Chat, $"Hello! {message.Chat.Username}. I got your message, but for use write @*this_bot_name* in chat!");
+                            InlineKeyboardButton button = InlineKeyboardButton.WithSwitchInlineQueryCurrentChat("Try me!");
+                            InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(button);
+                            await botClient.SendTextMessageAsync(message.Chat, $"Hello, {message.Chat.Username}! \nFor use this bot write <code>@{(await botClient.GetMeAsync()).Username}</code> + hit *space* as message to any chat!", replyMarkup: keyboard, parseMode: ParseMode.Html);
                         }
                         break;
                 }

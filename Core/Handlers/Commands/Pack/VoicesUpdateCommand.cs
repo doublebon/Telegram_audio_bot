@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using telegram_audio_bot.Core.Handlers.Commands.Attributes;
 using telegram_audio_bot.Core.Store;
 
 namespace telegram_audio_bot.Core.Handlers.Commands.Pack
 {
+    [AdminRequire]
+    [BotCommand]
     internal class VoicesUpdateCommand : BaseCommand
     {
         protected override string GetCommandName()
@@ -19,11 +18,6 @@ namespace telegram_audio_bot.Core.Handlers.Commands.Pack
 
         public override async Task<bool> TryCommandRun(ITelegramBotClient botClient, Message message)
         {
-            if (!Bot.IsAdminMessage(message))
-            {
-                return false;
-            }
-
             var isAnswer = await AnswerOnReply(botClient, message);
 
             if (!isAnswer && IsCommand(message))

@@ -8,10 +8,13 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
+using telegram_audio_bot.Core.Handlers.Commands.Attributes;
 using telegram_audio_bot.Core.Store;
 
 namespace telegram_audio_bot.Core.Handlers.Commands.Pack
 {
+    [AdminRequire]
+    [BotCommand]
     internal class GetAudioStoreFileCommand : BaseCommand
     {
         protected override string GetCommandName()
@@ -21,17 +24,11 @@ namespace telegram_audio_bot.Core.Handlers.Commands.Pack
 
         public override async Task<bool> TryCommandRun(ITelegramBotClient botClient, Message message)
         {
-            if (!Bot.IsAdminMessage(message))
-            {
-                return false;
-            }
-
             var isAnswer = await AnswerOnReply(botClient, message);
 
             if (!isAnswer && IsCommand(message))
             {
                 SendAudioStoreFile(botClient, message);
-                //await botClient.SendTextMessageAsync(message.Chat, "Voices list was updated", ParseMode.Markdown);
             }
 
             return isAnswer || IsCommand(message);
