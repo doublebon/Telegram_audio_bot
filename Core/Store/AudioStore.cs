@@ -15,6 +15,11 @@ namespace telegram_audio_bot.Core.Store
         public readonly record struct VoiceTitleAndId(string Title, string FileId);
         private readonly static string AudioStoreFileName = "audioStore.txt";
 
+        public static string GetAudioStoreFileName()
+        {
+            return AudioStoreFileName;
+        }
+
         private static void CreateAudioStoreFileIfNotExist()
         {
             File.AppendText(AudioStoreFileName).Close();

@@ -15,7 +15,8 @@ namespace telegram_audio_bot.Core.Handlers.Commands
             new HelloCommand(),
             new AddVoiceCommand(),
             new DelVoiceCommand(),
-            new VoicesUpdateCommand()
+            new VoicesUpdateCommand(),
+            new GetAudioStoreFileCommand()
         };
 
         public static ConcurrentDictionary<long, IReadOnlyList<BaseCommand>> CommandsForUserId = new();
