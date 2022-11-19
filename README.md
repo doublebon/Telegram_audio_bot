@@ -1,6 +1,6 @@
 # Telegram_audio_bot
 
-For start enter your telegram bot token into appsettings.json
+For start enter your telegram bot token and admin nickname (yours probably) into appsettings.json
 
 ## Usage
 Enter @YourBotName at any chat for send prewious added audio!
