@@ -1,4 +1,6 @@
 # Telegram_audio_bot
+Bot that can send preloaded audio files as voice!
+
 ## Requirements
 - `Docker` on unix
 
