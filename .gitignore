@@ -2,3 +2,4 @@
 bin
 obj
 *.user
+.idea/.idea.telegram_audio_bot/.idea
